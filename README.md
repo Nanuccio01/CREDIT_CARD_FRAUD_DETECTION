@@ -4,6 +4,7 @@
 
 ### Gruppo di lavoro:
 •	Dafne Spaccavento, d.spaccavento@studenti.uniba.it 
+
 •	Gaetano Schiralli, g.schiralli5@studenti.uniba.it
 
 ### Repository GitHub:
