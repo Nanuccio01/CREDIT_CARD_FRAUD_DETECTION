@@ -11,8 +11,11 @@
 https://github.com/Nanuccio01/CREDIT_CARD_FRAUD_DETECTION
 
 ### Definizione dell'Obiettivo e Comprensione dei Dati
+##### • L'obiettivo:
 L'obiettivo di questo progetto è sviluppare un modello in grado di individuare le transazioni fraudolente all'interno di un dataset contenente transazioni effettuate con carte di credito. Il dataset in questione contiene transazioni effettuate da titolari di carte di credito europee nel mese di settembre 2013.
-Comprensione dei Dati: Il dataset è composto da transazioni che si sono verificate in due giorni, con un totale di 284.807 transazioni. All'interno di queste transazioni, sono presenti 492 casi di frode. Il dataset presenta uno sbilanciamento significativo tra le classi, poiché la classe positiva (frodi) costituisce lo 0.172% di tutte le transazioni.
+
+##### • Comprensione dei Dati: 
+Il dataset è composto da transazioni che si sono verificate in due giorni, con un totale di 284.807 transazioni. All'interno di queste transazioni, sono presenti 492 casi di frode. Il dataset presenta uno sbilanciamento significativo tra le classi, poiché la classe positiva (frodi) costituisce lo 0.172% di tutte le transazioni.
 Le variabili di input sono numeriche e sono il risultato di una trasformazione PCA (Principal Component Analysis). Le feature V1, V2, ..., V28 rappresentano le principali componenti ottenute con PCA. Le uniche feature che non sono state trasformate con PCA sono 'Time' e 'Amount'. La feature 'Time' rappresenta i secondi trascorsi tra ogni transazione e la prima transazione nel dataset, mentre la feature 'Amount' rappresenta l'importo della transazione. La feature 'Class' è la variabile di risposta e assume il valore 1 in caso di frode e 0 altrimenti.
 
 Dato il disequilibrio tra le classi, si consiglia di misurare l'accuratezza utilizzando l'Area Under the Precision-Recall Curve (AUPRC), poiché la matrice di confusione non è significativa per la classificazione sbilanciata.
