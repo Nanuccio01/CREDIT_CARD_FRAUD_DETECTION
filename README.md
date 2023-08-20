@@ -16,20 +16,44 @@ L'obiettivo di questo progetto è sviluppare un modello in grado di individuare 
 
 #### • Comprensione dei Dati: 
 Il dataset è composto da transazioni che si sono verificate in due giorni, con un totale di 284.807 transazioni. All'interno di queste transazioni, sono presenti 492 casi di frode. Le variabili di input sono tutte numeriche. Il dataset presenta uno sbilanciamento significativo tra le classi, poiché la classe positiva (frodi) costituisce lo 0.172% di tutte le transazioni.
+![Alt text](<Grafico a torta.png>)
 
--Le feature V1, V2, ..., V28 rappresentano le principali componenti ottenute come risultato di una trasformazione PCA (Principal Component Analysis), perchè a causa della privacy, il nome di questi campi è reso anonimo.
+-Le feature V1, V2, ..., V28 sono campi float e rappresentano le principali componenti ottenute come risultato di una trasformazione PCA (Principal Component Analysis), perchè a causa delle tutele privacy, il nome di questi campi è reso anonimo.
  
--Le uniche feature che non sono state trasformate con PCA sono 'Time' e 'Amount'. La feature 'Time' rappresenta i secondi trascorsi tra ogni transazione e la prima transazione nel dataset, mentre la feature 'Amount' rappresenta l'importo della transazione. La feature 'Class' è la variabile di risposta e assume il valore 1 in caso di frode e 0 altrimenti.
+-Le uniche feature che non sono state trasformate con PCA sono 'Time' e 'Amount', entrambe intere. La feature 'Time' rappresenta i secondi trascorsi tra ogni transazione e la prima transazione nel dataset, mentre la feature 'Amount' rappresenta l'importo della transazione. La feature 'Class' è la variabile di risposta e assume il valore 1 in caso di frode e 0 altrimenti.
 
 Dato il disequilibrio tra le classi, si consiglia di misurare l'accuratezza utilizzando l'Area Under the Precision-Recall Curve (AUPRC), poiché la matrice di confusione non è significativa per la classificazione sbilanciata.
 
-### Esplorazione e Analisi dei Dati:
-![Alt text](<Grafico a torta.png>)
-
-
 ### Preparazione dei Dati e Creazione della Knowledge Base (KB)
 In questo passo, eseguiremo le seguenti attività:
-1.	Preprocessing dei Dati: Carichiamo il dataset e analizziamo la sua struttura. Effettuiamo eventuali operazioni di pulizia dei dati, gestione dei valori mancanti e normalizzazione delle feature numeriche.
+#### 1.	Preprocessing dei Dati: 
+Una volta caricato il dataset completo si analizza la sua struttura.
+Per prima cosa controlliamo la presenza di valori mancanti nel Dataset. In questo caso nessun problema vien creato, in quanto tutte le colonne presentano dei valori.
+![Alt text](<Verifica valori mancanti.png>)
+
+Successivamente abbiamo scelto di analizzare e descrivere solo le colonne 'Time', 'Amount' e 'Class' (tralasciando le feature V1, V2, ..., V28)per ottenere una visione dettagliata di alcune delle caratteristiche chiave dei dati che possono avere un impatto significativo sull'analisi delle frodi su carte di credito:
+
+-"Amount" (Importo della Transazione):
+Si analizza questa colonna per capire la distribuzione degli importi ed il totale delle transazioni nel dataset. L'importo delle transazioni potrebbe variare ampiamente e potrebbe essere utile comprendere se ci sono trend o pattern specifici nella distribuzione degli importi per le transazioni legittime o fraudolente.
+
+-"Time" (Tempo della Transazione):
+Si esamina questa colonna per identificare qualsiasi modello temporale nei dati. Potrebbe esserci una correlazione tra i momenti delle transazioni e la probabilità di frode. Analizzando questa colonna, si potrebbero  individuare intervalli di tempo in cui si verificano più frodi o altre tendenze temporali interessanti, in quanto nel dataset sono presenti più transazioni per ogni secondo analizzato.
+
+-"Class" (Classe di Transazione - Legittima(0) o Fraudolenta(1)):
+Si inserisce questa colonna perché rappresenta la variabile target dell'analisi delle frodi. Sebbene la si inserisce solo per capire la distribuzione delle classi (legittima o fraudolenta) nel dataset già analizzate in precedenza, questo campo è nuovamente analizzato per completezza.
+
+![Alt text](<Statistiche descrittive.png>)
+
+
+ Effettuiamo eventuali operazioni di pulizia dei dati, gestione dei valori mancanti e normalizzazione delle feature numeriche.
+
+
+
+
+
+
+
+
 2.	Creazione della KB: Costruiamo una Knowledge Base (KB) che modelli le relazioni tra gli elementi nel dataset. Identifichiamo gli individui (transazioni) e le proprietà rilevanti, come le feature V1-V28, Time e Amount. Definiamo le relazioni tra queste proprietà, come ad esempio relazioni di sequenza temporale tra le transazioni.
 3.	Definizione delle Regole di Inferenza: Definiamo regole di inferenza nella KB che ci permettano di dedurre nuove informazioni o riconoscere pattern all'interno dei dati. Ad esempio, possiamo definire regole che catturino comportamenti anomali spesso associati alle transazioni fraudolente.
 4.	Integrazione di Ontologie: Utilizziamo ontologie o conoscenza di dominio per arricchire la KB e consentire al modello di comprendere meglio le caratteristiche delle transazioni e le possibili relazioni tra di loro.
