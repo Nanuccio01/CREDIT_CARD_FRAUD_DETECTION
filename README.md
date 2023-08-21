@@ -3,7 +3,7 @@
 ## Documentazione Caso di Studio Ingegneria della Conoscenza A.A. 2022/23
 
 ### Gruppo di lavoro:
-•	Dafne Spaccavento, d.spaccavento@studenti.uniba.it 
+•	Dafne Spaccavento, d.spaccavento@studenti.uniba.it
 
 •	Gaetano Schiralli, g.schiralli5@studenti.uniba.it
 
@@ -28,7 +28,12 @@ Una volta caricato il dataset completo si analizza la sua struttura.
 Si controlla la presenza di valori mancanti nel Dataset. In questo caso nessun problema vien creato, in quanto tutte le colonne presentano dei valori.
 ![Valori mancanti](./Immagini/Verifica%20valori%20mancanti.png)
 
-#### 2. Creazione della KB: 
+Successivamente analizzando il dataset per la ricerca di valori nulli come importo, si è notato che:  
+-Il numero delle transazioni fraudolente con importo nullo (Amount=0) è: 27   
+-Il numero delle transazioni legittime con importo nullo (Amount=0) è: 1798   
+Inizialmente si stava considerando l'eliminazione di questi campi poiché non sembrava esserci un motivo o uno scopo chiaro per la loro presenza, in quanto una transazione non si potrebbe definire valida con un ammontare pari a zero. Ricercando ulteriolmente però, si è appurato che esistono sia venditori che effettuano una transazione di prova per verificare gli estremi della carta bancaria, e sia siti web di lotterie o concorsi dove il vincitore effettua una transazione con ammontare pari a zero. Considerando codeste variabili reali quindi, tali righe sono state accettate come valide nel dataset.
+
+#### 2. Creazione della Knowledge Base: 
 Successivamente abbiamo scelto di analizzare e descrivere solo le colonne 'Time', 'Amount' e 'Class' (tralasciando le feature V1, V2, ..., V28)per ottenere una visione dettagliata di alcune delle caratteristiche chiave dei dati che possono avere un impatto significativo sull'analisi delle frodi su carte di credito:
 
 -"Amount" (Importo della Transazione):
