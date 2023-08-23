@@ -61,7 +61,7 @@ Il dataset è composto da transazioni che si sono verificate in due giorni, con 
  
 - Le uniche feature che non sono state trasformate con PCA sono 'Time' e 'Amount', entrambe intere. La feature 'Time' rappresenta i secondi trascorsi tra ogni transazione e la prima transazione nel dataset, mentre la feature 'Amount' rappresenta l'importo della transazione. La feature 'Class' è la variabile di risposta e assume il valore 1 in caso di frode e 0 altrimenti.
 
-Successivamente abbiamo scelto di analizzare e descrivere solo le colonne 'Time', 'Amount' e 'Class' (tralasciando le feature V1, V2, ..., V28)per ottenere una visione dettagliata di alcune delle caratteristiche chiave dei dati che possono avere un impatto significativo sull'analisi delle frodi su carte di credito:
+Successivamente abbiamo scelto di analizzare e descrivere solo le colonne 'Time', 'Amount' e 'Class' (tralasciando le feature V1, V2, ..., V28), per ottenere una visione dettagliata di alcune delle caratteristiche chiave dei dati che possono avere un impatto significativo sull'analisi delle frodi su carte di credito:
 
 - "Amount" (Importo della Transazione):
 Si analizza questa colonna per capire la distribuzione degli importi ed il totale delle transazioni nel dataset. L'importo delle transazioni potrebbe variare ampiamente e potrebbe essere utile comprendere se ci sono trend o pattern specifici nella distribuzione degli importi per le transazioni legittime o fraudolente.
@@ -81,7 +81,7 @@ Guardando alla caratteristica "Time", possiamo confermare che i dati contengono 
 Dopo aver esplorato i dati, possiamo ora affermare a colpo d'occhio di non aver notato nessuna ripetizione o comportamento significativo tra i dati.
 
 ### Preparazione dei Dati e Creazione della Knowledge Base (KB)
-#### 1.	Preprocessing dei Dati: 
+#### 1.	Preprocessing dei Dati (Gestione dei dati mancanti e non utilizzabili): 
 Una volta caricato il dataset completo si analizza la sua struttura.
 Si controlla la presenza di valori mancanti nel Dataset. In questo caso nessun problema vien creato, in quanto tutte le colonne presentano dei valori.
 ![Valori mancanti](./Immagini/Verifica%20valori%20mancanti.png)
