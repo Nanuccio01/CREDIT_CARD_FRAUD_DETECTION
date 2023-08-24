@@ -17,15 +17,14 @@ https://github.com/Nanuccio01/CREDIT_CARD_FRAUD_DETECTION
 - Analisi Esplorativa dei Dati
 
 #### 2. Preparazione dei Dati e Creazione della Knowledge Base (KB)
-- Preprocessing dei Dati (Gestione dei Dati Mancanti e Non Utilizzabili)   
+- Preprocessing dei Dati  
 - Creazione della Knowledge Base
 
 #### 3. Overfitting
 - Concetto e Tecniche utilizzate per mitigare l'Overfitting
-Applicazione di Cross-Validation
-Apprendimento Supervisionato con Diversi Modelli
 
 #### 4. Introduzione all'Apprendimento Supervisionato e Modelli
+Applicazione di Cross-Validation
 Utilizzo degli Alberi di Decisione
 Applicazione di Regressione e Classificazione Lineare
 Valutazione delle Prestazioni dei Modelli
@@ -44,7 +43,9 @@ Conclusione
 #### 7. Riassunto dei Risultati
 Discussione delle Sfide e Prospettive Future
 
-### Definizione dell'Obiettivo e Comprensione dei Dati
+---------------------------------------------------------------------------------------------------------------------
+
+### 1. Definizione dell'Obiettivo e Comprensione dei Dati
 #### • L'obiettivo:
 L'obiettivo di questo progetto è sviluppare un modello in grado di individuare le transazioni fraudolente all'interno di un dataset contenente transazioni effettuate con carte di credito. Il dataset in questione contiene transazioni effettuate da titolari di carte di credito europee nel mese di settembre 2013.
 
@@ -52,7 +53,7 @@ L'obiettivo di questo progetto è sviluppare un modello in grado di individuare 
 Il dataset è composto da transazioni che si sono verificate in due giorni, con un totale di 284.807 transazioni. All'interno di queste transazioni, sono presenti 492 casi di frode. Le variabili di input sono tutte numeriche. Il dataset presenta uno sbilanciamento significativo tra le classi, poiché la classe positiva (frodi) costituisce lo 0.172% di tutte le transazioni.
 ![Grafico a torta](./Immagini/Grafico%20a%20torta.png)
 
-- Le feature V1, V2, ..., V28 sono campi float e rappresentano le principali componenti ottenute come risultato di una trasformazione PCA (Principal Component Analysis), perchè a causa delle tutele privacy, il nome di questi campi è reso anonimo.
+- Le feature V1, V2, ..., V28 sono campi float e rappresentano le principali componenti ottenute come risultato di una trasformazione PCA (Principal Component Analysis), perchè a causa delle tutele privacy, il nome di questi campi è reso anonimo. Per implementare una trasformazione PCA, le feature devono essere preventivamente scalate. In questo caso, quindi, tutte le feature V1, V2, ..., V28 sono state scalate o almeno è ciò che assumiamo abbiano fatto gli sviluppatori del dataset.
  
 - Le uniche feature che non sono state trasformate con PCA sono 'Time' e 'Amount', entrambe intere. La feature 'Time' rappresenta i secondi trascorsi tra ogni transazione e la prima transazione nel dataset, mentre la feature 'Amount' rappresenta l'importo della transazione. La feature 'Class' è la variabile di risposta e assume il valore 1 in caso di frode e 0 altrimenti.
 
@@ -75,8 +76,10 @@ Guardando alla caratteristica "Time", possiamo confermare che i dati contengono 
 
 Dopo aver esplorato i dati, possiamo ora affermare a colpo d'occhio di non aver notato nessuna ripetizione o comportamento significativo tra i dati.
 
-### Preparazione dei Dati e Creazione della Knowledge Base (KB)
-#### Preprocessing dei Dati (Gestione dei dati mancanti e non utilizzabili): 
+### 2. Preparazione dei Dati e Creazione della Knowledge Base (KB)
+#### Preprocessing dei Dati:
+
+Gestione dei dati mancanti e non utilizzabili: 
 Una volta caricato il dataset completo si analizza la sua struttura.
 Si controlla la presenza di valori mancanti nel Dataset. In questo caso nessun problema vien creato, in quanto tutte le colonne presentano dei valori.
 ![Valori mancanti](./Immagini/Verifica%20valori%20mancanti.png)
@@ -86,6 +89,9 @@ Successivamente analizzando il dataset per la ricerca di valori nulli come impor
 - Il numero delle transazioni legittime con importo nullo (Amount=0) è: 1798
 
 Inizialmente si stava considerando l'eliminazione di questi campi poiché non sembrava esserci un motivo o uno scopo chiaro per la loro presenza, in quanto una transazione non si potrebbe definire valida con un ammontare pari a zero. Ricercando ulteriolmente però, si è appurato che esistono sia venditori che effettuano una transazione di prova per verificare gli estremi della carta bancaria, e sia siti web di lotterie o concorsi dove il vincitore effettua una transazione con ammontare pari a zero. Considerando codeste variabili reali quindi, tali righe sono state accettate come valide nel dataset.
+
+Inoltre in questa fase, andremo a scalare le colonne Time e Amount, per avere valori simili alle altre colonne precendentemente scalate in seguito alla trasformazione PCA. 
+![Amount e tempo scalati](./Immagini/Amount%20e%20Tempo%20scalati.png)
 
 #### Creazione della Knowledge Base: 
 
@@ -107,13 +113,29 @@ Un altro motivo per cui andremo ad utilizzare le varie tecniche di mitigazione d
 Per questo andremo ad utilizzare le seguenti tecniche:
 - Creare un sottocampionamento del dataset (sub-Sampling): In questo scenario, il nostro subsample sarà un dataframe con un rapporto 50/50 tra transazioni fraudolente e non fraudolente. Ciò significa che il nostro sottocampionamento avrà lo stesso numero di transazioni fraudolente e non fraudolente, aiutando i nostri algoritmi a comprendere meglio i pattern che determinano se una transazione è una frode o meno. Le transazioni non fraudolente saranno casuali e sempre diverse nelle varie ripetizioni.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### 4. Introduzione all'Apprendimento Supervisionato e Modelli:
 
 Nelle transazioni, le features di input saranno le colonne numeriche, ad esempio "Time", "Amount" e le features "V1" a "V28".
 La feature target sarà la colonna "Class", che indica se una transazione è fraudolenta o legittima.
 
 Esempi di Training e Test:
-Gli "esempi di training" saranno un sottoinsieme del dataset (precisamente dell'80% del dataset originario) con tutte le colonne, inclusa la colonna "Class". Questi esempi verranno utilizzati per addestrare il modello.
+Gli "esempi di training" saranno un sottoinsieme del dataset con tutte le colonne, inclusa la colonna "Class". Questi esempi verranno utilizzati per addestrare il modello.
 
 Gli "esempi di test" saranno un altro sottoinsieme del dataset contenente solo le colonne numeriche (senza la colonna "Class"). Questi esempi verranno utilizzati per testare il modello addestrato e fare previsioni sulle classi delle transazioni.
 
@@ -121,6 +143,18 @@ Considerando le feature del dataset, abbiamo individuato un possibile target per
     ● 0 se la transazione è legittima
     ● 1 altrimenti
 
+Ovviamente utilizzando il metodo 10-fold Cross-Validation, non abbiamo bisogno di fare manualmente questa divisione.
+
+# K-NN 
+Considerando che il nostro dataset contiene una porzione significativa di dati privati i quali non possono essere selezionati o esclusi a causa della mancanza di conoscenza sul loro contenuto, potrebbe essere prudente utilizzare tutte le features disponibili nel contesto dell'algoritmo k-Nearest Neighbors (k-NN). Questo approccio ci permette di sfruttare tutte le informazioni disponibili per effettuare le previsioni, tenendo presente che alcune features potrebbero contenere informazioni utili.
+
+Tuttavia, siamo consapevoli dei rischi associati all'utilizzo di tutte le features, specialmente quando il dataset contiene dati sensibili o potenzialmente rumorosi. L'aumento della dimensionalità dello spazio delle feature potrebbe comportare distorsioni nelle misure delle distanze tra le osservazioni, influenzando le prestazioni del modello k-NN.
+
+Quindi, il K-NN è stato sostanzialmente eseguito sul dataset avente 31 features.
+- Features di input: Time, "Amount e le features da "V1" a "V28".
+- Features di output: IS_FRAUD oppure direttamente la classe Class.
+
+# Alberi di decisione
 Gli alberi decisionali sono uno strumento potente per la classificazione e la regressione, in quanto dividono iterativamente il dataset in sottoinsiemi sempre più ristretti, utilizzando le feature disponibili per prendere decisioni. Tuttavia, possono essere soggetti all'overfitting, cioè adattarsi troppo bene ai dati di addestramento e non generalizzare bene ai nuovi dati.
 
 Per superare questo problema, abbiamo esplorato l'uso di algoritmi ensemble, che combinano più alberi decisionali per ottenere risultati migliori e più stabili. Ecco alcuni dei principali algoritmi ensemble che abbiamo utilizzato:
@@ -150,12 +184,3 @@ Precisione della stima: Maggiore è il numero di iterazioni, maggiore sarà la p
 Rappresentatività: Utilizzando più fold, possiamo avere un'idea migliore di come il modello generalizza su diverse parti del dataset, riducendo il rischio di ottenere una valutazione distorta da una singola divisione casuale dei dati.
 
 Tuttavia, è importante notare che utilizzare un valore elevato di "k" (ad esempio 10) potrebbe richiedere più tempo di calcolo rispetto a valori più bassi, poiché richiede più iterazioni. 
-
-
-
-
-Dettagli Tecnici delle Feature:
-
-Trasformazione PCA: La descrizione dei dati indica che tutte le feature sono state sottoposte a una trasformazione PCA (tecnica di riduzione della dimensionalità) (eccetto tempo e importo).
-
-Scaling: Tieni presente che per implementare una trasformazione PCA, le feature devono essere preventivamente scalate. (In questo caso, tutte le feature V sono state scalate o almeno è ciò che stiamo assumendo che abbiano fatto le persone che hanno sviluppato il dataset.)
