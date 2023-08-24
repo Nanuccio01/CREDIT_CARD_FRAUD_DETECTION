@@ -20,33 +20,28 @@ https://github.com/Nanuccio01/CREDIT_CARD_FRAUD_DETECTION
 - Preprocessing dei Dati (Gestione dei Dati Mancanti e Non Utilizzabili)   
 - Creazione della Knowledge Base
 
-#### 3. Spiegazione delle Relazioni Logiche
-Definizione delle Clausole Definite Proposizionali
-Implementazione delle Clausole nella Knowledge Base
-Affrontare il Problema dell'Overfitting
-
-#### 4. Concetto di Overfitting e Impatto
-Tecniche per Mitigare l'Overfitting
+#### 3. Overfitting
+- Concetto e Tecniche utilizzate per mitigare l'Overfitting
 Applicazione di Cross-Validation
 Apprendimento Supervisionato con Diversi Modelli
 
-#### 5. Introduzione all'Apprendimento Supervisionato e Modelli
+#### 4. Introduzione all'Apprendimento Supervisionato e Modelli
 Utilizzo degli Alberi di Decisione
 Applicazione di Regressione e Classificazione Lineare
 Valutazione delle Prestazioni dei Modelli
 Apprendimento Probabilistico con Naive Bayes
 
-#### 6. Introduzione al Modello Probabilistico Naive Bayes
+#### 5. Introduzione al Modello Probabilistico Naive Bayes
 Adattamento di Naive Bayes al Problema
 Valutazione delle Prestazioni di Naive Bayes
 Apprendimento Non Supervisionato con Clustering
 
-#### 7. Concetto di Apprendimento Non Supervisionato e Clustering
+#### 6. Concetto di Apprendimento Non Supervisionato e Clustering
 Applicazione del Metodo di Clustering (es. K-Means)
 Interpretazione dei Cluster Ottenuti
 Conclusione
 
-#### 8. Riassunto dei Risultati
+#### 7. Riassunto dei Risultati
 Discussione delle Sfide e Prospettive Future
 
 ### Definizione dell'Obiettivo e Comprensione dei Dati
@@ -81,7 +76,7 @@ Guardando alla caratteristica "Time", possiamo confermare che i dati contengono 
 Dopo aver esplorato i dati, possiamo ora affermare a colpo d'occhio di non aver notato nessuna ripetizione o comportamento significativo tra i dati.
 
 ### Preparazione dei Dati e Creazione della Knowledge Base (KB)
-#### 1.	Preprocessing dei Dati (Gestione dei dati mancanti e non utilizzabili): 
+#### Preprocessing dei Dati (Gestione dei dati mancanti e non utilizzabili): 
 Una volta caricato il dataset completo si analizza la sua struttura.
 Si controlla la presenza di valori mancanti nel Dataset. In questo caso nessun problema vien creato, in quanto tutte le colonne presentano dei valori.
 ![Valori mancanti](./Immagini/Verifica%20valori%20mancanti.png)
@@ -92,8 +87,75 @@ Successivamente analizzando il dataset per la ricerca di valori nulli come impor
 
 Inizialmente si stava considerando l'eliminazione di questi campi poiché non sembrava esserci un motivo o uno scopo chiaro per la loro presenza, in quanto una transazione non si potrebbe definire valida con un ammontare pari a zero. Ricercando ulteriolmente però, si è appurato che esistono sia venditori che effettuano una transazione di prova per verificare gli estremi della carta bancaria, e sia siti web di lotterie o concorsi dove il vincitore effettua una transazione con ammontare pari a zero. Considerando codeste variabili reali quindi, tali righe sono state accettate come valide nel dataset.
 
-#### 2. Creazione della Knowledge Base: 
+#### Creazione della Knowledge Base: 
 
 (Costruiamo una Knowledge Base (KB) che modelli le relazioni tra gli elementi nel dataset. Identifichiamo gli individui (transazioni) e le proprietà rilevanti, come le feature V1-V28, Time e Amount. Definiamo le relazioni tra queste proprietà, come ad esempio relazioni di sequenza temporale tra le transazioni.)
 
 Dato il disequilibrio tra le classi, si consiglia di misurare l'accuratezza utilizzando l'Area Under the Precision-Recall Curve (AUPRC), poiché la matrice di confusione non è significativa per la classificazione sbilanciata.
+
+### 3. Concetto di Overfitting
+#### Concetto e Tecniche utilizzate per mitigare l'Overfitting:
+ 
+Uno dei problemi che potrebbe creare lo sbilanciamento del nostro dataset originale è quello dell'overfitting.
+
+L'overfitting è una condizione in cui un modello di apprendimento automatico si adatta troppo strettamente ai dati di addestramento. Questo significa che il modello cattura non solo i modelli sottostanti nei dati, ma anche il rumore o le variazioni casuali presenti nei dati di addestramento. Di conseguenza, il modello potrebbe avere una performance eccezionalmente buona sui dati di addestramento, ma si comporta in maniera pessima su nuovi dati che non ha mai elaborato prima.
+
+Dunque, se utilizziamo questo dataframe come base per i nostri modelli predittivi e per le analisi, potremmo ottenere molti errori, in quanto gli algoritmi probabilmente "assumeranno" che la maggior parte delle transazioni non siano truffe(ricordiamo che sono solo lo 0.172% di tutte le transazioni). Siccome il nostro modello non è stato ideato per fare ipotesi, ma per essere sicuro di quando si verifichi una frode, andreamo ad utilizzare tecniche di regolarizzazione, limitando la complessità del modello. 
+
+Un altro motivo per cui andremo ad utilizzare le varie tecniche di mitigazione delle problematiche è per le Correlazioni Errate: Siccome non sappiamo cosa rappresentano le feature "V", sarà comunque utile capire come ciascuna di queste feature influenzerà il risultato (Frode o Non Frode). Avendo un dataframe sbilanciato, quindi, non saremo in grado di vedere le vere correlazioni tra la classe e le feature.
+
+Per questo andremo ad utilizzare le seguenti tecniche:
+- Creare un sottocampionamento del dataset (sub-Sampling): In questo scenario, il nostro subsample sarà un dataframe con un rapporto 50/50 tra transazioni fraudolente e non fraudolente. Ciò significa che il nostro sottocampionamento avrà lo stesso numero di transazioni fraudolente e non fraudolente, aiutando i nostri algoritmi a comprendere meglio i pattern che determinano se una transazione è una frode o meno. Le transazioni non fraudolente saranno casuali e sempre diverse nelle varie ripetizioni.
+
+### 4. Introduzione all'Apprendimento Supervisionato e Modelli:
+
+Nelle transazioni, le features di input saranno le colonne numeriche, ad esempio "Time", "Amount" e le features "V1" a "V28".
+La feature target sarà la colonna "Class", che indica se una transazione è fraudolenta o legittima.
+
+Esempi di Training e Test:
+Gli "esempi di training" saranno un sottoinsieme del dataset (precisamente dell'80% del dataset originario) con tutte le colonne, inclusa la colonna "Class". Questi esempi verranno utilizzati per addestrare il modello.
+
+Gli "esempi di test" saranno un altro sottoinsieme del dataset contenente solo le colonne numeriche (senza la colonna "Class"). Questi esempi verranno utilizzati per testare il modello addestrato e fare previsioni sulle classi delle transazioni.
+
+Considerando le feature del dataset, abbiamo individuato un possibile target per un task di classificazione: IS_FRAUD per una data transazione è
+    ● 0 se la transazione è legittima
+    ● 1 altrimenti
+
+Gli alberi decisionali sono uno strumento potente per la classificazione e la regressione, in quanto dividono iterativamente il dataset in sottoinsiemi sempre più ristretti, utilizzando le feature disponibili per prendere decisioni. Tuttavia, possono essere soggetti all'overfitting, cioè adattarsi troppo bene ai dati di addestramento e non generalizzare bene ai nuovi dati.
+
+Per superare questo problema, abbiamo esplorato l'uso di algoritmi ensemble, che combinano più alberi decisionali per ottenere risultati migliori e più stabili. Ecco alcuni dei principali algoritmi ensemble che abbiamo utilizzato:
+
+- DecisionTreeClassifier: Abbiamo iniziato con il DecisionTreeClassifier, un algoritmo che costruisce un singolo albero decisionale. Questo ci ha permesso di esplorare le potenzialità di base degli alberi decisionali nel nostro caso di rilevamento delle transazioni fraudolente.
+
+- RandomForest: Successivamente, abbiamo implementato il RandomForest, un algoritmo ensemble che combina diversi alberi decisionali creati su sottoinsiemi casuali dei dati e delle feature. Questo ha migliorato la generalizzazione e la robustezza del nostro modello, riducendo l'overfitting.
+
+- AdaBoost: Abbiamo anche esaminato l'AdaBoost, un algoritmo che assegna maggior peso agli esempi classificati erroneamente, permettendo agli alberi successivi di concentrarsi sulle aree difficili da classificare. Questo ha portato a un miglioramento delle prestazioni sui casi più complessi.
+
+- GradientBoostingClassifier: Infine, abbiamo sperimentato il GradientBoostingClassifier, che costruisce gli alberi in modo sequenziale, ognuno correggendo gli errori dei precedenti. Questa metodologia ha permesso di ottenere previsioni sempre più accurate, affinando progressivamente il modello.
+
+In sintesi, attraverso l'applicazione di alberi decisionali e degli algoritmi ensemble sopra menzionati, siamo stati in grado di creare modelli che possono  individuare transazioni fraudolente all'interno del nostro dataset. 
+
+Per garantire una valutazione accurata e affidabile delle capacità predittive dei nostri modelli, adotteremo il metodo "10-fold Cross-Validation", che ci consentirà di valutare le prestazioni dei nostri classificatori in modo robusto e accurato.
+
+Durante ciascuna iterazione, il classificatore verrà addestrato sui dati di addestramento e valutato sui dati di test. Le metriche di valutazione, come l'accuratezza, la precisione, il richiamo e l'F1-score, verranno calcolate per ogni iterazione. Alla fine delle 10 iterazioni, calcoleremo le medie di queste metriche per ottenere una stima complessiva delle prestazioni del classificatore.
+La "10-fold Cross-Validation" è un caso specifico della k-fold Cross-Validation in cui il valore di "k" è impostato a 10. Ciò significa che il dataset verrà diviso in 10 parti uguali, e il processo di addestramento e valutazione verrà ripetuto 10 volte.
+Le ragioni per preferire la "10-fold Cross-Validation" includono:
+
+Bilanciamento tra varianza e bias: Utilizzare un numero maggiore di fold (come nel caso della 10-fold) può fornire una stima più accurata delle prestazioni del modello, poiché il processo di addestramento e valutazione viene eseguito su un maggior numero di partizioni dei dati.
+
+Robustezza: L'uso di più fold rende la valutazione più robusta rispetto alle fluttuazioni casuali nei dati di training e test.
+
+Precisione della stima: Maggiore è il numero di iterazioni, maggiore sarà la precisione delle stime delle metriche di valutazione, come l'accuratezza, la precisione e il richiamo.
+
+Rappresentatività: Utilizzando più fold, possiamo avere un'idea migliore di come il modello generalizza su diverse parti del dataset, riducendo il rischio di ottenere una valutazione distorta da una singola divisione casuale dei dati.
+
+Tuttavia, è importante notare che utilizzare un valore elevato di "k" (ad esempio 10) potrebbe richiedere più tempo di calcolo rispetto a valori più bassi, poiché richiede più iterazioni. 
+
+
+
+
+Dettagli Tecnici delle Feature:
+
+Trasformazione PCA: La descrizione dei dati indica che tutte le feature sono state sottoposte a una trasformazione PCA (tecnica di riduzione della dimensionalità) (eccetto tempo e importo).
+
+Scaling: Tieni presente che per implementare una trasformazione PCA, le feature devono essere preventivamente scalate. (In questo caso, tutte le feature V sono state scalate o almeno è ciò che stiamo assumendo che abbiano fatto le persone che hanno sviluppato il dataset.)
