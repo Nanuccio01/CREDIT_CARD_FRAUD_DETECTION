@@ -1,8 +1,34 @@
-import pandas as pd
+import numpy as np
+import pandas as pd 
+import seaborn as sns
 from sklearn.utils import resample
-from sklearn.preprocessing import StandardScaler, RobustScaler
+from sklearn.preprocessing import StandardScaler, RobustScaler, MinMaxScaler
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.model_selection import train_test_split
-
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import cross_val_score
+from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
+from sklearn.metrics import mean_absolute_error,mean_squared_error,r2_score,f1_score
+from sklearn.metrics import roc_curve, auc
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+from xgboost import XGBClassifier
+from lightgbm import LGBMClassifier
+from catboost import CatBoostClassifier
+import matplotlib.pyplot as plt
+import plotly.express as px
+from matplotlib import colors
+import plotly.graph_objs as go
+from plotly.offline import iplot
+from plotly.subplots import make_subplots
+from scipy import stats
+from scipy.stats import norm, skew
+import warnings
+warnings.filterwarnings("ignore")
 
 csv_path = '/Users/tanon/CREDIT_CARD_FRAUD_DETECTION/Dataset/creditcard.csv'
 dataset = pd.read_csv(csv_path)
@@ -14,8 +40,8 @@ data=dataset.copy()
 rob_scaler = RobustScaler()
 
 # Creazione di nuove colonne con i dati scalati di Importo e Tempo
-data['scaled_amount'] = rob_scaler.fit_transform(df['Amount'].values.reshape(-1,1))
-data['scaled_time'] = rob_scaler.fit_transform(df['Time'].values.reshape(-1,1))
+data['scaled_amount'] = rob_scaler.fit_transform(data['Amount'].values.reshape(-1,1))
+data['scaled_time'] = rob_scaler.fit_transform(data['Time'].values.reshape(-1,1))
 
 # Rimozione delle colonne originali di Importo e Tempo
 data.drop(['Time','Amount'], axis=1, inplace=True)
@@ -31,24 +57,42 @@ data.drop(['scaled_amount', 'scaled_time'], axis=1, inplace=True)
 data.insert(0, 'scaled_amount', scaled_amount)
 data.insert(1, 'scaled_time', scaled_time)
 
-# Divide le transazioni in legittime e fraudolente
-legitimate_transactions = data[data['Class'] == 0]
-fraudulent_transactions = data[data['Class'] == 1]
+# Estrai le features (variabili indipendenti) dal dataframe escludendo la colonna "Class" e trasformale in un array
+X = data.drop(["Class"], axis=1).values
 
-# Sottocampiona il numero di transazioni legittime per farlo corrispondere al numero di transazioni fraudolente
-legitimate_subsample = resample(legitimate_transactions, replace=False, n_samples=len(fraudulent_transactions), random_state=42)
+# Estrai le etichette di classe dalla colonna "Class" del dataframe e trasformale in un array
+y = data["Class"].values
 
-# Combina le transazioni legittime sottocampionate con quelle fraudolente
-balanced_subsample = pd.concat([legitimate_subsample, fraudulent_transactions])
+# Suddividi i dati in training set e test set usando il metodo train_test_split
+# X_train conterrà le features del training set, y_train conterrà le etichette di classe del training set
+# X_test conterrà le features del test set, y_test conterrà le etichette di classe del test set
+Original_X_train, Original_X_test, Original_y_train, Original_y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Mischia il sottocampionamento 
-balanced_subsample = balanced_subsample.sample(frac=1, random_state=42)
+# Crea un oggetto StandardScaler per la standardizzazione dei dati
+# sc = StandardScaler()
 
-# Divide le features (X) dalla variabile target (y)
-X = balanced_subsample.drop('Class', axis=1)  # Features
-y = balanced_subsample['Class']  # Target
+# Applica la standardizzazione alle features del training set
+# X_train = sc.fit_transform(X_train)
 
-# Dividi il dataset in training set e test set (80% per il training e 20% per il test)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Applica la standardizzazione alle features del test set usando la media e la deviazione standard calcolate dal training set
+#X_test = sc.transform(X_test)
 
-# Ora hai i tuoi training set e test set pronti per essere utilizzati con i modelli di apprendimento
+knn=KNeighborsClassifier()
+dtc=DecisionTreeClassifier()
+rfc=RandomForestClassifier()
+gbc=GradientBoostingClassifier()
+abc=AdaBoostClassifier()
+
+models = [knn, dtc, rfc, gbc, abc]
+model_names = ['KNN', 'Decision Tree', 'Random Forest', 'Gradient Boosting', 'AdaBoost']
+
+for model in models:
+    model.fit(Original_X_train, Original_y_train)
+    Original_y_pred = model.predict(Original_X_test)
+    print(type(model).__name__, "Model Test Accuracy Score is: ", accuracy_score(Original_y_test, Original_y_pred))
+    print(type(model).__name__, "Model Test F1 Score is: ", f1_score(Original_y_test, Original_y_pred))
+    print(type(model).__name__,"Mean_absolute_error: ",mean_absolute_error(Original_y_test, Original_y_pred))
+    print(type(model).__name__,"Mean_squared_error: ",mean_squared_error(Original_y_test, Original_y_pred))
+    print(type(model).__name__,"Root_mean_squared_error: ",np.sqrt(mean_squared_error(Original_y_test, Original_y_pred)))
+    print(type(model).__name__,"R2_score: ",r2_score(Original_y_test, Original_y_pred))
+    print(type(model).__name__,"Classification_report: \n",classification_report(Original_y_test, Original_y_pred))
