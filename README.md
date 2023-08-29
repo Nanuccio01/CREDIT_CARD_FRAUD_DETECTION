@@ -23,7 +23,7 @@ https://github.com/Nanuccio01/CREDIT_CARD_FRAUD_DETECTION
 #### 3. Overfitting
 - Concetto e Tecniche utilizzate per mitigare l'Overfitting
 
-#### 4. Introduzione all'Apprendimento Supervisionato e Modelli
+#### 4. Classificazione Transazioni
 Applicazione di Cross-Validation
 Utilizzo degli Alberi di Decisione
 Applicazione di Regressione e Classificazione Lineare
@@ -57,7 +57,7 @@ Il dataset è composto da transazioni che si sono verificate in due giorni, con 
  
 - Le uniche feature che non sono state trasformate con PCA sono 'Time' e 'Amount', entrambe intere. La feature 'Time' rappresenta i secondi trascorsi tra ogni transazione e la prima transazione nel dataset, mentre la feature 'Amount' rappresenta l'importo della transazione. La feature 'Class' è la variabile di risposta e assume il valore 1 in caso di frode e 0 altrimenti.
 
-Successivamente abbiamo scelto di analizzare e descrivere solo le colonne 'Time', 'Amount' e 'Class' (tralasciando le feature V1, V2, ..., V28), per ottenere una visione dettagliata di alcune delle caratteristiche chiave dei dati che possono avere un impatto significativo sull'analisi delle frodi su carte di credito:
+Successivamente abbiamo scelto di analizzare e descrivere approfonditamente, solo le colonne 'Time', 'Amount' e 'Class' (tralasciando le feature V1, V2, ..., V28), per ottenere una visione dettagliata di alcune delle caratteristiche chiave dei dati che possono avere un impatto significativo sull'analisi delle frodi su carte di credito:
 
 - "Amount" (Importo della Transazione):
 Si analizza questa colonna per capire la distribuzione degli importi ed il totale delle transazioni nel dataset. L'importo delle transazioni potrebbe variare ampiamente e potrebbe essere utile comprendere se ci sono trend o pattern specifici nella distribuzione degli importi per le transazioni legittime o fraudolente.
@@ -74,7 +74,20 @@ Qui troviamo riportate le statistiche descrittive delle tre features sopra descr
 ![Statistiche](./Immagini/Statistiche%20descrittive.png)
 Guardando alla caratteristica "Time", possiamo confermare che i dati contengono 284807 transazioni, distribuite durante 2 giorni consecutivi (o 172792 secondi).
 
-Dopo aver esplorato i dati, possiamo ora affermare a colpo d'occhio di non aver notato nessuna ripetizione o comportamento significativo tra i dati.
+Dopo aver esplorato inizialmente i dati, possiamo affermare a colpo d'occhio di non aver notato nessuna ripetizione o comportamento significativo tra essi.
+
+Per avere un quadro più generale delle correlazioni, quindi, si sono utilizzati i grafici KDE che mostrano la stima delle densità delle caratteristiche per due classi: Classe 0 (transazioni legittime) e Classe 1 (transazioni fraudolente): 
+- I grafici servono a visualizzare come le distribuzioni delle caratteristiche differiscano tra le due classi, infatti consentono di vedere la forma approssimativa delle distribuzioni delle caratteristiche per entrambe le classi. Se ci sono differenze significative nelle distribuzioni tra le classi per una particolare caratteristica, potrebbe indicare che essa è utile per distinguere tra transazioni legittime e fraudolente.
+![Densità](./Immagini/Densità%201.png)
+![Densità2](./Immagini/Densità%202.png)
+
+Per alcune delle caratteristiche possiamo osservare una buona selettività in termini di distribuzione per i due valori della classe: 
+- V4 e V11 hanno distribuzioni chiaramente separate per i valori di Classe 0 e 1.
+- V12 e V14 sono parzialmente separati.
+- V1, V2, V3 e V10 hanno un profilo piuttosto distinto.
+- V25, V26 e V28 hanno profili simili per i due valori della Classe.
+
+In generale, con poche eccezioni (Tempo e Importo), la distribuzione delle caratteristiche per le transazioni legittime (valori di Classe = 0) è centrata intorno a 0, talvolta con una lunga coda su uno dei lati estremi. Allo stesso tempo, le transazioni fraudolente (valori di Classe = 1) hanno una distribuzione asimmetrica (sbilanciata).
 
 ### 2. Preparazione dei Dati e Creazione della Knowledge Base (KB)
 #### Preprocessing dei Dati:
@@ -95,9 +108,7 @@ Inoltre in questa fase, andremo a scalare le colonne Time e Amount, per avere va
 
 #### Creazione della Knowledge Base: 
 
-(Costruiamo una Knowledge Base (KB) che modelli le relazioni tra gli elementi nel dataset. Identifichiamo gli individui (transazioni) e le proprietà rilevanti, come le feature V1-V28, Time e Amount. Definiamo le relazioni tra queste proprietà, come ad esempio relazioni di sequenza temporale tra le transazioni.)
-
-Dato il disequilibrio tra le classi, si consiglia di misurare l'accuratezza utilizzando l'Area Under the Precision-Recall Curve (AUPRC), poiché la matrice di confusione non è significativa per la classificazione sbilanciata.
+In questa fase di creazione della Knowledge Base, dopo aver esplorato il nostro dataset, a causa delle limitate informazioni da esso contenute e della mancanza di altri dataset rilevanti da accorpare, non siamo stati in grado di arricchire ulteriormente la nostra Knowledge Base. Ci siamo concentrati sull'analisi e l'interpretazione delle informazioni presenti nel dataset attuale, utilizzando strumenti di visualizzazione e tecniche di analisi per ottenere una comprensione più approfondita delle caratteristiche e dei modelli presenti nei dati.
 
 ### 3. Concetto di Overfitting
 #### Concetto e Tecniche utilizzate per mitigare l'Overfitting:
@@ -112,6 +123,9 @@ Un altro motivo per cui andremo ad utilizzare le varie tecniche di mitigazione d
 
 Per questo andremo ad utilizzare le seguenti tecniche:
 - Creare un sottocampionamento del dataset (sub-Sampling): In questo scenario, il nostro subsample sarà un dataframe con un rapporto 50/50 tra transazioni fraudolente e non fraudolente. Ciò significa che il nostro sottocampionamento avrà lo stesso numero di transazioni fraudolente e non fraudolente, aiutando i nostri algoritmi a comprendere meglio i pattern che determinano se una transazione è una frode o meno. Le transazioni non fraudolente saranno casuali e sempre diverse nelle varie ripetizioni.
+- Utilizzare la Cross-validation: è una procedura di campionamento ripetuto utilizzata per valutare modelli di apprendimento automatico su un campione limitato di dati. La procedura ha un singolo parametro chiamato k che si riferisce al numero di fold o gruppi in cui un dato campione deve essere suddiviso. Pertanto, spesso la procedura è chiamata cross-validation k-fold. Lo scopo della cross-validation è testare la capacità di un modello di apprendimento automatico di prevedere nuovi dati. 
+
+Il miglior modello non è quello che fornisce previsioni accurate sui dati di addestramento, ma quello che offre buone previsioni su nuovi dati e evita Overfitting e Underfitting.
 
 
 
@@ -129,7 +143,7 @@ Per questo andremo ad utilizzare le seguenti tecniche:
 
 
 
-### 4. Introduzione all'Apprendimento Supervisionato e Modelli:
+### 4. Classificazione Omicidi
 
 Nelle transazioni, le features di input saranno le colonne numeriche, ad esempio "Time", "Amount" e le features "V1" a "V28".
 La feature target sarà la colonna "Class", che indica se una transazione è fraudolenta o legittima.
