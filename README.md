@@ -89,6 +89,8 @@ Per alcune delle caratteristiche possiamo osservare una buona selettività in te
 
 In generale, con poche eccezioni (Tempo e Importo), la distribuzione delle caratteristiche per le transazioni legittime (valori di Classe = 0) è centrata intorno a 0, talvolta con una lunga coda su uno dei lati estremi. Allo stesso tempo, le transazioni fraudolente (valori di Classe = 1) hanno una distribuzione asimmetrica (sbilanciata).
 
+Basandoci sui grafici KDE, potremmo fare delle scelte informate su quali feature includere nel modello successivamente. Se alcune caratteristiche hanno distribuzioni molto simili tra le due classi, potremmo decidere di escluderle dal modello, riducendo così la complessità e migliorando le prestazioni. 
+
 ### 2. Preparazione dei Dati e Creazione della Knowledge Base (KB)
 #### Preprocessing dei Dati:
 
@@ -143,7 +145,7 @@ Il miglior modello non è quello che fornisce previsioni accurate sui dati di ad
 
 
 
-### 4. Classificazione Omicidi
+### 4. Classificazione Transazioni
 
 Nelle transazioni, le features di input saranno le colonne numeriche, ad esempio "Time", "Amount" e le features "V1" a "V28".
 La feature target sarà la colonna "Class", che indica se una transazione è fraudolenta o legittima.
@@ -166,7 +168,7 @@ Tuttavia, siamo consapevoli dei rischi associati all'utilizzo di tutte le featur
 
 Quindi, il K-NN è stato sostanzialmente eseguito sul dataset avente 31 features.
 - Features di input: Time, "Amount e le features da "V1" a "V28".
-- Features di output: IS_FRAUD oppure direttamente la classe Class.
+- Features di output: la classe Class.
 
 # Alberi di decisione
 Gli alberi decisionali sono uno strumento potente per la classificazione e la regressione, in quanto dividono iterativamente il dataset in sottoinsiemi sempre più ristretti, utilizzando le feature disponibili per prendere decisioni. Tuttavia, possono essere soggetti all'overfitting, cioè adattarsi troppo bene ai dati di addestramento e non generalizzare bene ai nuovi dati.
@@ -174,14 +176,58 @@ Gli alberi decisionali sono uno strumento potente per la classificazione e la re
 Per superare questo problema, abbiamo esplorato l'uso di algoritmi ensemble, che combinano più alberi decisionali per ottenere risultati migliori e più stabili. Ecco alcuni dei principali algoritmi ensemble che abbiamo utilizzato:
 
 - DecisionTreeClassifier: Abbiamo iniziato con il DecisionTreeClassifier, un algoritmo che costruisce un singolo albero decisionale. Questo ci ha permesso di esplorare le potenzialità di base degli alberi decisionali nel nostro caso di rilevamento delle transazioni fraudolente.
+SPIEGARE GLI IPERPARAMETRI
 
 - RandomForest: Successivamente, abbiamo implementato il RandomForest, un algoritmo ensemble che combina diversi alberi decisionali creati su sottoinsiemi casuali dei dati e delle feature. Questo ha migliorato la generalizzazione e la robustezza del nostro modello, riducendo l'overfitting.
+SPIEGARE COME ABBIAMO SCELTO IL NUMERO DI ALBERI
 
 - AdaBoost: Abbiamo anche esaminato l'AdaBoost, un algoritmo che assegna maggior peso agli esempi classificati erroneamente, permettendo agli alberi successivi di concentrarsi sulle aree difficili da classificare. Questo ha portato a un miglioramento delle prestazioni sui casi più complessi.
 
 - GradientBoostingClassifier: Infine, abbiamo sperimentato il GradientBoostingClassifier, che costruisce gli alberi in modo sequenziale, ognuno correggendo gli errori dei precedenti. Questa metodologia ha permesso di ottenere previsioni sempre più accurate, affinando progressivamente il modello.
 
-In sintesi, attraverso l'applicazione di alberi decisionali e degli algoritmi ensemble sopra menzionati, siamo stati in grado di creare modelli che possono  individuare transazioni fraudolente all'interno del nostro dataset. 
+In sintesi, attraverso l'applicazione di alberi decisionali e degli algoritmi ensemble sopra menzionati, siamo stati in grado di creare modelli che possono  individuare transazioni fraudolente all'interno del nostro dataset.  
+
+# Logistic Regression
+La regressione logistica è computazionalmente efficiente, il che significa che può essere addestrata su grandi dataset in tempi relativamente brevi. Questo è vantaggioso quando si hanno dataset con molte transazioni, come nel nostro caso.
+PARLARE DELLA REGOLARIZZAZIONE
+
+(da inserire nel codice e Assicurati di sostituire X e y con le tue features e il tuo target, rispettivamente. Questo esempio ti fornirà una stima delle prestazioni del modello di regressione logistica utilizzando la cross-validation.)
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import cross_val_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+# Supponiamo che tu abbia già preparato i tuoi dati come X (features) e y (target).
+
+# Creazione di un modello di regressione logistica
+logistic_model = LogisticRegression()
+
+# Eseguire la 10-fold cross-validation e calcolare le metriche di valutazione
+accuracy_scores = cross_val_score(logistic_model, X, y, cv=10, scoring='accuracy')
+precision_scores = cross_val_score(logistic_model, X, y, cv=10, scoring='precision')
+recall_scores = cross_val_score(logistic_model, X, y, cv=10, scoring='recall')
+f1_scores = cross_val_score(logistic_model, X, y, cv=10, scoring='f1')
+
+# Calcolare le medie delle metriche
+mean_accuracy = accuracy_scores.mean()
+mean_precision = precision_scores.mean()
+mean_recall = recall_scores.mean()
+mean_f1 = f1_scores.mean()
+
+# Stampare i risultati
+print("Mean Accuracy:", mean_accuracy)
+print("Mean Precision:", mean_precision)
+print("Mean Recall:", mean_recall)
+print("Mean F1-score:", mean_f1)
+
+#### 5. Concetto di Apprendimento Non Supervisionato e Clustering
+Il clustering può suddividere il Nostro dataset in gruppi omogenei in base a determinate caratteristiche o pattern. Questa segmentazione può aiutare a identificare se ci sono gruppi di transazioni legittime o gruppi di transazioni fraudolente con caratteristiche comuni. Questo potrebbe rivelare insight sul comportamento dei truffatori o dei clienti legittimi.
+
+
+
+
+
+
 
 Per garantire una valutazione accurata e affidabile delle capacità predittive dei nostri modelli, adotteremo il metodo "10-fold Cross-Validation", che ci consentirà di valutare le prestazioni dei nostri classificatori in modo robusto e accurato.
 
@@ -197,4 +243,4 @@ Precisione della stima: Maggiore è il numero di iterazioni, maggiore sarà la p
 
 Rappresentatività: Utilizzando più fold, possiamo avere un'idea migliore di come il modello generalizza su diverse parti del dataset, riducendo il rischio di ottenere una valutazione distorta da una singola divisione casuale dei dati.
 
-Tuttavia, è importante notare che utilizzare un valore elevato di "k" (ad esempio 10) potrebbe richiedere più tempo di calcolo rispetto a valori più bassi, poiché richiede più iterazioni. 
+Tuttavia, è importante notare che utilizzare un valore elevato di "k" (ad esempio 10) potrebbe richiedere più tempo di calcolo rispetto a valori più bassi, poiché richiede più iterazioni.
