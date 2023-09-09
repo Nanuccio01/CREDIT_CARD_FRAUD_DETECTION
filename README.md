@@ -16,9 +16,8 @@ https://github.com/Nanuccio01/CREDIT_CARD_FRAUD_DETECTION
 - L'obiettivo
 - Analisi Esplorativa dei Dati
 
-#### 2. Preparazione dei Dati e Creazione della Knowledge Base (KB)
+#### 2. Preparazione dei Dati
 - Preprocessing dei Dati  
-- Creazione della Knowledge Base
 
 #### 3. Overfitting
 - Concetto e Tecniche utilizzate per mitigare l'Overfitting
@@ -91,7 +90,7 @@ In generale, con poche eccezioni (Tempo e Importo), la distribuzione delle carat
 
 Basandoci sui grafici KDE, potremmo fare delle scelte informate su quali feature includere nel modello successivamente. Se alcune caratteristiche hanno distribuzioni molto simili tra le due classi, potremmo decidere di escluderle dal modello, riducendo così la complessità e migliorando le prestazioni. 
 
-### 2. Preparazione dei Dati e Creazione della Knowledge Base (KB)
+### 2. Preparazione dei Dati
 #### Preprocessing dei Dati:
 
 Gestione dei dati mancanti e non utilizzabili: 
@@ -108,9 +107,6 @@ Inizialmente si stava considerando l'eliminazione di questi campi poiché non se
 Inoltre in questa fase, andremo a scalare le colonne Time e Amount, per avere valori simili alle altre colonne precendentemente scalate in seguito alla trasformazione PCA. 
 ![Amount e tempo scalati](./Immagini/Amount%20e%20Tempo%20scalati.png)
 
-#### Creazione della Knowledge Base: 
-
-In questa fase di creazione della Knowledge Base, dopo aver esplorato il nostro dataset, a causa delle limitate informazioni da esso contenute e della mancanza di altri dataset rilevanti da accorpare, non siamo stati in grado di arricchire ulteriormente la nostra Knowledge Base. Ci siamo concentrati sull'analisi e l'interpretazione delle informazioni presenti nel dataset attuale, utilizzando strumenti di visualizzazione e tecniche di analisi per ottenere una comprensione più approfondita delle caratteristiche e dei modelli presenti nei dati.
 
 ### 3. Concetto di Overfitting
 #### Concetto e Tecniche utilizzate per mitigare l'Overfitting:
